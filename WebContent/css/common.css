@@ -1,0 +1,15 @@
+html, body, ul, ui button
+{
+	margin: 0;
+	padding: 0;
+}
+img
+{
+	display: block;
+	border:0;
+}
+button
+{
+	border:0;
+	background:none;
+}

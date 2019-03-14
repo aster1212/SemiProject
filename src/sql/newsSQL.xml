@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+
+		<!-- 데이터를 꺼낼때 사용할 것 설정 -->
+		<typeAlias alias="news" type="news.newsVO" />
+		
+		<!-- 리절트 맵 정의 -->
+		<resultMap id="newsRes" class="news">
+		  	<result property="NEWS_NO" column="NEWS_NO"/>
+		  	<result property="NEWS_SUBJECT" column="NEWS_SUBJECT"/>
+		  	<result property="NEWS_CONTENT1" column="NEWS_CONTENT1"/>
+		  	<result property="NEWS_CONTENT2" column="NEWS_CONTENT2"/>
+		  	<result property="NEWS_IMAGE1" column="NEWS_IMAGE1"/>
+		  	<result property="NEWS_IMAGE2" column="NEWS_IMAGE2"/>
+		  	<result property="NEWS_DATE" column="NEWS_DATE"/>
+		  	<result property="NEWS_WRITER" column="NEWS_WRITER"/>
+		</resultMap>
+		
+
+		<!-- 영화전체 끌어오기 -->
+		<sql id="news-all">
+			SELECT * FROM NEWS
+		</sql>
+		
+		<!-- 공통으로 사용할 where-no절 정의 -->
+		<sql id="news-no">
+			WHERE NEWS_NO=#NEWS_NO#
+		</sql>
+		
+					
+		<insert id="insertnews" parameterClass="news">
+		 INSERT INTO NEWS (NEWS_NO,
+						   NEWS_SUBJECT,
+						   NEWS_CONTENT1,
+						   NEWS_CONTENT2,
+						   NEWS_IMAGE1,
+						   NEWS_IMAGE2,
+						   NEWS_DATE,
+						   NEWS_WRITER
+						   )
+	
+				    VALUES(#NEWS_NO#,
+				    	   #NEWS_SUBJECT#,
+				    	   #NEWS_CONTENT1#,
+				    	   #NEWS_CONTENT2#,
+				    	   #NEWS_IMAGE1#,
+				    	   #NEWS_IMAGE2#,
+				    	   #NEWS_DATE#,
+				    	   #NEWS_WRITER#
+					)
+					
+		</insert>
+					
+					
+
+	
+		<!-- select 쿼리문 정의  -->
+		
+		<!-- 상세보기  --> 
+	<select id="selectAll-news" resultMap="newsRes">
+		<include refid="news-all" />
+	</select>
+	
+	<select id="selectAll-list" resultMap="newsRes">
+		<include refid="news-all" />
+		WHERE NEWS_NO = #NEWS_NO#
+	</select>
+	
+	<!-- 한줄 가져오기 --> 
+		<select id="selectOne-news" resultMap="newsRes" parameterClass="int">
+		<include refid="news-all" />
+		<include refid="news-no" />
+	</select>
+	
+	<!-- 최근 일주일 -->
+	<select id="selectAll-7day" resultMap="newsRes">
+		SELECT * FROM NEWS
+		WHERE NEWS_DATE
+		BETWEEN TO_DATE(SYSDATE-7,'YY-MM-DD')
+		AND TO_DATE(SYSDATE, 'YY-MM-DD')
+		order by NEWS_DATE desc
+	</select>
+	
+	<!-- 최근 1년 -->
+	<select id="selectAll-365day" resultMap="newsRes">
+		SELECT * FROM NEWS
+		WHERE NEWS_DATE
+		BETWEEN TO_DATE(SYSDATE-365,'YY-MM-DD')
+		AND TO_DATE(SYSDATE, 'YY-MM-DD')
+		order by NEWS_DATE desc
+	</select>
+	
+
+		
+		
+		
+
+
+</sqlMap>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="board" type="board.BoardVO" />
+	<typeAlias alias="comment" type="board.CboardVO" />
+		<!-- 리절트 맵 정의 -->
+	  	<resultMap id="bRes" class="board">
+		  	<result property="bo_no" column="bo_no"/>
+		  	<result property="bo_genre" column="bo_genre"/>
+		  	<result property="category" column="category"/>
+		  	<result property="bo_writer" column="bo_writer"/>
+		  	<result property="bo_subject" column="bo_subject"/>
+		  	<result property="bo_cnt" column="bo_cnt"/>
+		  	<result property="bo_date" column="bo_date"/>
+		  	<result property="bo_content" column="bo_content"/>
+		  	<result property="bo_orgfile" column="bo_orgfile"/>
+		  	<result property="bo_savfile" column="bo_savfile"/>
+		</resultMap>
+		
+		<resultMap id="cRes" class="comment">
+			<result property="boc_no" column="boc_no" />
+			<result property="boc_originno" column="boc_originno" />
+			<result property="boc_writer" column="boc_writer" />
+			<result property="boc_content" column="boc_content" />
+			<result property="boc_date" column="boc_date" />
+			<result property="boc_ref" column="boc_ref" />
+			<result property="boc_restep" column="boc_restep" />
+			<result property="boc_relevel" column="boc_relevel" />
+			<result property="mem_no" column="mem_no" />			
+		</resultMap>
+		
+		<!-- 공통으로 사용할 select 절 정의 -->
+		<sql id="select-boardall">SELECT * FROM board</sql>
+		<sql id="select-comboard">SELECT * FROM boardc</sql>
+		<!-- 공통으로 사용할 where-no 절 정의 -->
+		<sql id="where-boardno">WHERE bo_no = #bo_no#</sql>
+		
+		<select id="copyAll" resultMap="cRes">
+			<include refid="select-comboard"/>
+			ORDER BY boc_ref DESC, boc_restep ASC
+		</select>
+		<!-- select 쿼리문 정의 -->
+		<select id="boardselectAll" resultMap="bRes">
+			<include refid="select-boardall" />
+			ORDER BY bo_no DESC
+		</select>
+		
+		<select id="freeboardAll" resultMap="bRes">
+			<include refid="select-boardall" />
+			where category='자유'
+			ORDER BY bo_no DESC
+		</select>
+		
+		<select id="freeboardAllmain" resultMap="bRes">
+			<include refid="select-boardall" />
+			where category='자유'
+			ORDER BY bo_cnt DESC
+		</select>
+		
+		<select id="spoboardAll" resultMap="bRes">
+			<include refid="select-boardall" />
+			where category='스포'
+			ORDER BY bo_no DESC
+		</select>
+		
+		<select id="spoboardAllmain" resultMap="bRes">
+			<include refid="select-boardall" />
+			where category='스포'
+			ORDER BY bo_cnt DESC
+		</select>
+		
+		<select id="smallboard" resultMap="bRes">
+			<![CDATA[
+			select*from
+			(select*from board order by bo_cnt DESC) where rownum<=7 and category='자유'
+			]]>
+		</select>
+		
+		
+		<select id="boardselectOne" resultMap="bRes" parameterClass="int">
+			<include refid="select-boardall" />
+			<include refid="where-boardno" />
+		</select>
+		
+		<select id="boardselectLastNo" resultClass="board">
+			SELECT max(bo_no) as bo_no FROM board
+		</select>
+		
+		<select id="commentSelectAll" resultMap="cRes" parameterClass="int">
+			<include refid="select-comboard"/>
+		 	WHERE boc_originno = #bo_no#
+		 	ORDER BY boc_ref DESC, boc_restep ASC
+		</select>
+		<select id="commentSelectOne" resultMap="cRes" parameterClass="int">
+			<include refid="select-comboard"/>
+		 	WHERE boc_no = #boc_no#
+		</select>
+		
+		<!-- select 검색로직 -->
+		<select id="selectSearch99" resultMap="bRes" parameterClass="String">
+			<include refid="select-boardall" />
+		 	WHERE category='자유'
+		</select>
+		<select id="selectSearch0" resultMap="bRes" parameterClass="String">
+			<include refid="select-boardall" />
+		 WHERE (bo_content like #SearchKeyword# or bo_subject like #SearchKeyword#) and bo_genre='액션' and category='자유'
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch1" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE (bo_content like #SearchKeyword# or bo_subject like #SearchKeyword#) and bo_genre='드라마/멜로' and category='자유'
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch2" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE (bo_content like #SearchKeyword# or bo_subject like #SearchKeyword#) and bo_genre='코미디' and category='자유'
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch3" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE (bo_content like #SearchKeyword# or bo_subject like #SearchKeyword#) and bo_genre='아동/가족' and category='자유'
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch4" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE (bo_content like #SearchKeyword# or bo_subject like #SearchKeyword#) and bo_genre='공포/범죄/스릴러' and category='자유'
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch5" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE (bo_content like #SearchKeyword# or bo_subject like #SearchKeyword#) and bo_genre='SF판타지' and category='자유'
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch6" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE bo_writer like #SearchKeyword#
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch7" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE bo_subject like #SearchKeyword#
+		 	ORDER BY bo_no DESC
+		</select>
+		<select id="selectSearch8" resultMap="bRes" parameterClass="string">
+			<include refid="select-boardall" />
+		 	WHERE bo_content like #SearchKeyword#
+		 	ORDER BY bo_no DESC
+		</select>
+		
+		
+		
+		<!-- insert 쿼리문 정의 -->
+		<insert id="insertBoard" parameterClass="board">
+			INSERT INTO BOARD (bo_no,category,bo_writer,bo_subject,bo_genre,bo_content,bo_date)
+                VALUES (BOARD_SEQ.NEXTVAL,#category#,#bo_writer#,#bo_subject#,#bo_genre#,#bo_content#,#bo_date#)
+		</insert>
+		
+		<insert id="insertComment" parameterClass="comment">
+			INSERT INTO BOARDC(boc_NO, boc_ORIGINNO, mem_no, boc_writer, boc_CONTENT, boc_DATE,boc_restep,boc_relevel,boc_ref)
+			VALUES (BOARDC_SEQ.NEXTVAL, #boc_originno#, #mem_no#, #boc_writer#,#boc_content#,#boc_date#,#boc_restep#,#boc_relevel#,BOARDC_SEQ.CURRVAL)
+		</insert>
+		<insert id="insertReplyComment" parameterClass="comment">
+			INSERT INTO BOARDC(boc_NO, boc_ORIGINNO, mem_no,boc_writer, boc_CONTENT, boc_DATE,boc_restep,boc_relevel,boc_ref)
+			VALUES (BOARDC_SEQ.NEXTVAL, #boc_originno#, #mem_no#,#boc_writer#,#boc_content#,#boc_date#,#boc_restep#,#boc_relevel#,#boc_ref#)
+		</insert>
+		
+		<update id="updateReplyStep" parameterClass="comment">
+			UPDATE boardc SET boc_restep=boc_restep+1 WHERE boc_ref=#boc_ref# AND boc_restep>#boc_restep#
+		</update>
+	
+		<!-- update 쿼리문 정의 -->
+		<update id="updateBoard" parameterClass="board">
+    		UPDATE BOARD SET bo_subject=#bo_subject#,bo_genre=#bo_genre#,bo_content=#bo_content#
+			<include refid="where-boardno" />
+   		</update>
+   		
+    	<update id="updateFile" parameterClass="board">
+    		UPDATE BOARD SET bo_orgfile=#bo_orgfile#,bo_savfile=#bo_savfile#
+			<include refid="where-boardno" />
+   		</update>
+   
+    	<update id="updateCnt" parameterClass="board">
+    		UPDATE BOARD SET bo_cnt=bo_cnt+1
+			<include refid="where-boardno" />
+   		</update>
+    
+
+		<!-- delete 쿼리문 정의 -->
+  		<delete id="deleteBoard" parameterClass="board">
+			DELETE FROM BOARD 
+			<include refid="where-boardno" />
+   		 </delete>
+   		 
+   		 <delete id="deleteComment" parameterClass="comment">
+			DELETE FROM BOARDC
+			WHERE boc_no = #boc_no#
+		</delete>
+
+</sqlMap>

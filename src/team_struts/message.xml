@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<!-- 용량제한 10MB 로 설정. -->
+	<constant name="struts.multipart.maxSize" value="10485760" />
+
+	<package name="msg" extends="struts-default">
+
+		<action name="Msg_list" class="message.messageListAction">
+			<result>/message/messageList.jsp</result>
+		</action>
+
+		<action name="Msg_Rec_list" class="message.messageListAction">
+			<result>/message/takeList.jsp</result>
+		</action>
+
+		<action name="Msg_Wrt_list" class="message.messageListAction"
+			method="execute2">
+			<result>/message/giveList.jsp</result>
+		</action>
+
+
+		<!-- 메세지 보내기 -->
+		<action name="MsgWriteForm" class="message.messageWriteAction"
+			method="form">
+			<result>/message/messageWrite.jsp</result>
+		</action>
+
+		<action name="Msg_writeAction"
+			class="message.messageWriteAction">
+			<result name="success">/message/messageWrite2.jsp</result>
+			<result name="error">/message/messageWrite.jsp</result>
+		</action>
+
+		<action name="MsgviewAction" class="message.messageViewAction">
+			<result name="success">/message/messageViewList.jsp</result>
+		</action>
+
+
+		<!-- 닉네임찾기 액션 -->
+		<action name="nicFindAction" class="message.messageFindAction"
+			method="nicFindAction">
+			<result type="chain">nicFindForm</result>
+		</action>
+	</package>
+</struts>

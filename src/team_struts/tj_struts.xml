@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<package name="report" extends="struts-default">
+		<action name="reportForm" class="report.ReportAction" method="form">
+	 		<result>/report/report.jsp</result>
+		</action>
+		<action name="reportAction" class="report.ReportAction">
+			<result>/report/reportClose.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 게시판 부분  -->
+	<package name="board" extends="struts-default, tiles-default">
+		<action name="listAction" class="board.ListAction">
+			<result type="tiles">boardList</result>
+		</action>
+		
+		<action name="listActionfree" class="board.ListAction" method="freeSel">
+			<result type="tiles">boardList</result>
+		</action>
+		
+		<action name="listActionspo" class="board.ListAction" method="spoSel">
+			<result type="tiles">boardList</result>
+		</action>
+		
+		<action name="writeForm" class="board.WriteAction" method="form">
+			<result type="tiles">writeForm</result>
+		</action>
+		
+		<action name="writeAction" class="board.WriteAction">
+			<result type="redirect-action">
+				<param name="actionName">listAction</param>
+			</result>
+		</action>
+		
+		<action name="viewAction" class="board.ViewAction">
+			<result type="tiles">viewAction</result>
+		</action>
+		
+		<action name="fileDownloadAction" class="board.ViewAction" method="download">
+    		<result name="success" type="stream">
+                <param name="contentType">binary/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="contentLength">${contentLength}</param> 
+                <param name="bufferSize">4096</param>
+         	</result>
+		</action>
+		
+		<action name="modifyForm" class="board.ViewAction">
+			<result type="chain">writeForm</result>
+		</action>
+		
+		<action name="modifyAction" class="board.ModifyAction">
+			<result type="redirect-action">
+				<param name="actionName">viewAction</param>
+				<param name="bo_no">${bo_no}</param>
+				<param name="currentPage">${currentPage}</param>
+			</result>
+		</action>
+		
+		<action name="deleteAction" class="board.DeleteAction">
+			<result type="redirect-action">listAction</result>
+		</action>
+		
+		<action name="writeCommentAction" class="board.CommentWriteAction">
+			<result type="redirect-action">
+				<param name="actionName">viewAction</param>
+				<param name="bo_no">${bo_no}</param>
+				<param name="currentPage">${currentPage}</param>
+			</result>
+		</action>
+	
+		<action name="deleteAction2" class="board.DeleteAction" method="execute2">
+			<result type="redirect-action">
+				<param name="actionName">viewAction</param>
+				<param name="bo_no">${bo_no}</param>
+				<param name="currentPage">${currentPage}</param>
+			</result>
+		</action> 
+	</package>
+</struts>

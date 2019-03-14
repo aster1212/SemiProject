@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.multipart.maxSize" value="104857600" />
+
+	<package name="bts" extends="struts-default, tiles-default">
+
+
+		<!-- 추가된부분(배우상세보기) -->
+		<action name="actView" class="movie.actViewAction"
+			method="execute">
+			<result type="tiles">actView</result>
+		</action>
+
+		<!-- 추가된부분2 (배우 이미지 상세보기) -->
+		<action name="actDetail" class="movie.actViewAction"
+			method="execute2">
+			<result type="tiles">actDetail</result>
+		</action>
+
+		<!-- 추가된부분3 (더보기) -->
+		<action name="actMore" class="movie.actViewAction"
+			method="execute3">
+			<result type="tiles">actMore</result>
+			<result name="error" type="tiles">actMoreError</result>
+		</action>
+
+
+		<!-- 추가된부분4 (스틸컷 상세보기) -->
+		<action name="stealDetail" class="movie.fullViewAction"
+			method="execute2">
+			<result type="tiles">stealDetail</result>
+		</action>
+
+
+
+
+
+		<!-- Movie메뉴 메인폼 -->
+		<action name="newMovieMain" class="movie.movieListAction"
+			method="execute">
+			<result type="tiles">newMovieMain</result>
+		</action>
+
+		<!-- 검색액션 -->
+		<action name="movieSearch" class="movie.movieListAction"
+			method="search">
+			<result type="chain">movieList</result>
+		</action>
+
+		<!-- 상영종료 리스트 -->
+		<action name="movieList" class="movie.movieListAction"
+			method="execute1">
+			<result type="tiles">movieList</result>
+		</action>
+
+		<!-- 상영중 영화리스트 -->
+		<action name="npMovieList" class="movie.movieListAction"
+			method="execute2">
+			<result type="tiles">npMovieList</result>
+		</action>
+		<!-- 상영예정 영화리스트 -->
+		<action name="upMovieList" class="movie.movieListAction"
+			method="execute3">
+			<result type="tiles">upMovieList</result>
+		</action>
+
+
+		<!--상세보기 -->
+		<action name="fullViewAction" class="movie.fullViewAction">
+			<result type="tiles">fullViewAction</result>
+		</action>
+
+		<!-- 좋아요 -->
+		<action name="movieLikeAction" class="movie.movieLikeAction">
+			<result type="chain">fullViewAction</result>
+		</action>
+
+		<!-- 좋아요 취소 -->
+		<action name="movieDeleteLikeAction" class="movie.movieDeleteLikeAction" method="delete">
+			<result type="chain">fullViewAction</result>
+		</action>
+
+
+		<action name="movieCommentWrite" class="movie.movieCommentWrite">
+			<result type="redirect-action">
+				<param name="actionName">fullViewAction</param>
+				<param name="MV_NO">${MV_NO}</param>
+			</result>
+		</action>
+
+		<action name="commentDelete" class="movie.commentDeleteAction" method="execute">
+			<result type="chain">fullViewAction</result>
+		</action>
+
+	</package>
+</struts>
+
+

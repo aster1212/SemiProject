@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	
+	<!-- 별명 -->
+	<typeAlias alias="member" type="member.memberVO" />
+	<typeAlias alias="memLikeVO" type="member.memberLikeVO"/>
+	
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="memResult" class="member">
+		<result property="memNo"    column="mem_no"  />
+		<result property="memId"    column="mem_id" />
+		<result property="memPw"    column="mem_pw" />
+		<result property="memName"  column="mem_name" />
+		<result property="memHp"    column="mem_hp" />
+		<result property="memGen"   column="mem_gen" />
+		<result property="memGrade" column="mem_grade" />
+		<result property="memFavor" column="mem_favor" />
+		<result property="memLike"  column="mem_like" />
+		<result property="memProfilePhoto" column="mem_profile_photo"/>
+	</resultMap>
+	
+	<!-- 공통으로 사용할 select 절 정의 -->
+	<sql id="mem-select-all">
+		select * from member 
+	</sql>
+
+	<!-- select 쿼리문 정의 -->
+	<select id="memSelectAll" resultMap="memResult">
+		<include refid="mem-select-all" />
+		 where not mem_grade=99 order by mem_id asc
+	</select>
+	
+	<select id="selectPass" resultMap="memResult" parameterClass="String">
+		select * from member where mem_id = #memId#
+	</select>
+	
+	<!-- 마이페이지 -->
+	<select id="mem-select-one" resultMap="memResult" parameterClass="int">
+		select * from member where mem_no=#memNo#
+	</select>
+	
+	<!-- 관심있는 영화 불러오기 -->
+	<select remapResults="true" id="mem-like-byNo" resultClass="memLikeVO" parameterClass="int">
+		select mem_no, mv_no from likes where mem_no=#memNo#
+	</select>
+	
+	<!-- 취향 업데이트 -->
+	<update id="mem-basic-update" parameterClass="member">
+		update member set mem_favor=#memFavor#, mem_hp=#memHp# where mem_no=#memNo#
+	</update>
+	<!-- 비밀번호 업데이트 -->
+	<update id="mem-pass-update" parameterClass="member">
+		update member set mem_pw=#memPw# where mem_no=#memNo#
+	</update>
+	<!-- 프로필 업데이트 -->
+	<update id="mem-profile-update" parameterClass="member">
+		update member set mem_profile_photo=#memProfilePhoto# where mem_no=#memNo#
+	</update>
+	
+	<!-- 회원 찾기 쿼리 -->
+	<select id="findId" resultMap="memResult" parameterClass="member">
+		select * from member where mem_hp=#memHp# and mem_name=#memName#
+	</select>
+	<select id="findPw" resultMap="memResult" parameterClass="member">
+		select * from member where mem_hp=#memHp# and mem_id=#memId#
+	</select>
+	
+	<!-- insert -->
+	
+	<!-- 회원가입 -->
+	<insert id="joinSQL" parameterClass="member">
+		INSERT INTO MEMBER (MEM_NO, 
+		MEM_ID, 
+		MEM_PW, 
+		MEM_NAME, 
+		MEM_HP, 
+		MEM_GEN, 
+		MEM_GRADE,
+		MEM_FAVOR
+		)
+		 VALUES (MEMBER_SEQ.NEXTVAL, 
+		 #memId#, 
+		 #memPw#, 
+		 #memName#, 
+		 #memHp#, 
+		 #memGen#, 
+		 0,
+		 #memFavor#
+		 )
+	</insert>
+	
+</sqlMap>

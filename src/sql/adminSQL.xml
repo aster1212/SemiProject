@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="adminMv" type="admin.adminMVVO" />
+	<typeAlias alias="adminRp" type="admin.adminRPVO" />
+	<typeAlias alias="adminTc" type="admin.adminTraceVO" />
+	<typeAlias alias="adminVal" type="admin.ValidationVO" />
+	<typeAlias alias="adminAct" type="admin.adminActVO"/>
+
+	<resultMap id="adminMvRes" class="adminMv">
+		<result property="MV_NO" column="MV_NO" />
+		<result property="MV_SUBJECT" column="MV_SUBJECT" />
+		<result property="MV_GENRE" column="MV_GENRE" />
+		<result property="MV_DATE" column="MV_DATE" />
+		<result property="MV_DIR" column="MV_DIR" />
+		<result property="MV_MAIN" column="MV_MAIN" />
+		<result property="MV_SUB" column="MV_SUB" />
+		<result property="MV_GRADE" column="MV_GRADE" />
+		<result property="MV_STATE" column="MV_STATE" />
+		<result property="MV_TIME" column="MV_TIME" />
+		<result property="MV_PROD" column="MV_PROD" />
+		<result property="MV_SS" column="MV_SS" />
+		<result property="MV_LS" column="MV_LS" />
+		<result property="MV_CHAIN" column="MV_CHAIN" />
+		<result property="MV_HASH" column="MV_HASH" />
+		<result property="MV_TYPE" column="MV_TYPE" />
+		<result property="MV_FRESH" column="MV_FRESH" />
+		<result property="MV_FILE_ORGNAME" column="MV_FILE_ORGNAME" />
+		<result property="MV_FILE_SAVNAME" column="MV_FILE_SAVNAME" />
+		<result property="MV_AVR" column="MV_AVR" />
+	</resultMap>
+	
+	<resultMap id="adminRpRes" class="adminRp">
+		<result property="rep_no" column="REP_NO" />
+		<result property="rep_writer" column="REP_WRITER" />
+		<result property="rep_content" column="REP_CONTENT" />
+		<result property="rep_date" column="REP_DATE" />
+		<result property="rep_ed_no" column="REP_ED_NO" />
+		<result property="rep_ed_type" column="REP_ED_TYPE" />
+		<result property="rep_ed_content" column="REP_ED_CONTENT" />
+		<result property="rep_status" column="REP_STATUS" />
+	</resultMap>
+	
+	<!-- 배우 결과맵 -->
+	<resultMap id="adminActRes" class="adminAct">
+		<result property="ACT_NO" column="ACT_NO"/>
+		<result property="ACT_NAME" column="ACT_NAME"/>
+		<result property="ACT_BIRTH" column="ACT_BIRTH"/> 
+		<result property="ACT_TYPE" column="ACT_TYPE"/> 
+		<result property="ACT_MV_NO" column="ACT_MV_NO"/>
+		<result property="ACT_PROFILE" column="ACT_PROFILE"/>
+	 	<result property="ACT_FILE_SAVNAME" column="ACT_FILE_SAVNAME"/>
+	 	<result property="ACT_FILE_ORGNAME" column="ACT_FILE_ORGNAME"/>
+	 	<result property="PROFILE_ORGNAME" column="PROFILE_ORGNAME"/>
+	 	<result property="PROFILE_SAVNAME" column="PROFILE_SAVNAME"/>
+	</resultMap>
+	
+	<!-- 회원삭제 -->
+	<delete id="adminMemDel" parameterClass="int">
+		delete from member where mem_no=#memNo#
+	</delete>
+	<!-- 영화 리스트 -->
+	<select id="adminMvAll" resultMap="adminMvRes">
+		select * from movie order by MV_NO desc
+	</select>
+	<select id="adminMvOne" resultMap="adminMvRes" parameterClass="int">
+		select MV_NO,
+	MV_SUBJECT,
+	MV_GENRE,
+	MV_DATE,
+	MV_DIR,
+	MV_MAIN,
+	MV_SUB,
+	MV_GRADE,
+	MV_STATE,
+	MV_TIME,
+	MV_PROD,
+	MV_SS,
+	MV_LS,
+	MV_CHAIN,
+	MV_HASH,
+	MV_TYPE,
+	MV_FRESH,
+	MV_FILE_ORGNAME,
+	MV_FILE_SAVNAME,
+	MV_AVR from movie where MV_NO=#MV_NO#
+	</select>
+	<select id="adminMvLastOne" resultMap="adminMvRes">
+		select * from movie where MV_NO=(select max(MV_NO) from movie)
+	</select>
+	<!-- 영화 등록 -->
+	<insert id="adminMvInsert" parameterClass="adminMv">
+	insert into movie(
+	MV_NO,
+	MV_SUBJECT,
+	MV_GENRE,
+	MV_DATE,
+	MV_DIR,
+	MV_MAIN,
+	MV_SUB,
+	MV_GRADE,
+	MV_STATE,
+	MV_TIME,
+	MV_PROD,
+	MV_SS,
+	MV_LS,
+	MV_CHAIN,
+	MV_HASH,
+	MV_TYPE,
+	MV_FRESH,
+	MV_AVR
+	) values(
+	MOVIE_MV_NO_SEQ.NEXTVAL,
+	#MV_SUBJECT#,
+	#MV_GENRE#,
+	#MV_DATE#,
+	#MV_DIR#,
+	#MV_MAIN#,
+	#MV_SUB#,
+	#MV_GRADE#,
+	#MV_STATE#,
+	#MV_TIME#,
+	#MV_PROD#,
+	#MV_SS#,
+	#MV_LS#,
+	#MV_CHAIN#,
+	#MV_HASH#,
+	#MV_TYPE#,
+	#MV_FRESH#,
+	0
+	)
+	</insert>
+	<!-- 영화 수정 -->
+	<update id="adminMvUpdate" parameterClass="adminMv">
+		update movie set 
+		MV_SUBJECT	=#MV_SUBJECT#,
+		MV_GENRE	=#MV_GENRE#,
+		MV_DATE		=#MV_DATE#,
+		MV_DIR		=#MV_DIR#,
+		MV_MAIN		=#MV_MAIN#,
+		MV_SUB		=#MV_SUB#,
+		MV_GRADE	=#MV_GRADE#,
+		MV_STATE	=#MV_STATE#,
+		MV_TIME		=#MV_TIME#,
+		MV_PROD		=#MV_PROD#,
+		MV_SS		=#MV_SS#,
+		MV_LS 		=#MV_LS#,
+		MV_CHAIN 	=#MV_CHAIN#,
+		MV_HASH		=#MV_HASH#,
+		MV_TYPE 	=#MV_TYPE#,
+		MV_FRESH	=#MV_FRESH#,
+		MV_AVR		=#MV_AVR#
+		 where MV_NO=#MV_NO#
+	</update>
+	<!-- 포스터 업데이트 -->
+	<update id="updatePoster" parameterClass="adminMv">
+		UPDATE MOVIE SET MV_FILE_ORGNAME=#MV_FILE_ORGNAME#,MV_FILE_SAVNAME=#MV_FILE_SAVNAME# 
+		WHERE MV_NO=#MV_NO#
+	</update>
+	
+	<!-- 영화 삭제 -->
+	<delete id="adminMvDel" parameterClass="int">
+		delete from movie where MV_NO=#MV_NO#
+	</delete>
+	
+	<!-- 리스트 뷰 -->
+	<!-- allList -->
+	<select id="adminRpListAll" resultMap="adminRpRes">
+		select * from REPORT order by rep_status asc, rep_date desc 
+	</select>
+	<!-- whereList -->
+	<select id="adminRpListType" resultMap="adminRpRes" parameterClass="int">
+		select * from REPORT where rep_ed_type=#viewType# order by rep_status asc, rep_date desc 
+	</select>
+	
+	<!-- status update -->
+	<update id="adminRpStatusUpdate" parameterClass="int">
+		update report set rep_status = 1 where rep_no = #rep_no#
+	</update>
+	
+	<!-- 글 추적 -->
+	<select id="adminTcSQL" remapResults="true" resultClass="adminTc" parameterClass="adminTc">
+		select * from $tableName$ where $colName$=#rep_ed_no#
+	</select>
+	<!-- 추적 글 삭제 -->
+	<delete id="adminTcDelete" parameterClass="adminTc">
+		delete from $tableName$ where $colName$=#rep_ed_no#
+	</delete>
+	<!-- 신고 삭제 -->
+	<delete id="reportDelete" parameterClass="int">
+		delete from report where rep_no=#rep_no#
+	</delete>
+	
+	<!-- validate -->
+	<select id="selectUniqueBocOriginno" resultClass="adminVal">
+		select distinct numbers from (select boc_originno as numbers from boardc)
+	</select>
+	<!-- check count validate -->
+	<select id="selectNullBocCount" resultClass="int" parameterClass="int">
+		select count(boc_no) from boardc where boc_originno=#i#
+	</select>
+	<!-- delete for validate -->
+	<delete id="deleteNullBocOriginno" parameterClass="int">
+		delete from boardc where boc_originno=#i#
+	</delete>
+	
+	<!-- 배우 리스트 -->
+	<select id="adminActAll" resultMap="adminActRes">
+		select * from actor order by ACT_NO desc
+	</select>
+	
+	<select id="adminActOne" resultMap="adminActRes" parameterClass="int">
+		select * from actor where ACT_NO=#ACT_NO#
+	</select>
+	
+	<select id="adminActLastOne" resultMap="adminActRes">
+		select * from actor where ACT_NO=(select max(ACT_NO) from ACTOR)
+	</select>
+	
+	<!-- 배우 등록 -->
+	<insert id="adminActInsert" parameterClass="adminAct">
+	insert into actor(
+	ACT_NO,
+	ACT_NAME,
+	ACT_BIRTH,
+	ACT_TYPE,
+	ACT_MV_NO,
+	ACT_PROFILE
+	) values (
+	ACTOR_ACT_NO_SEQ.NEXTVAL,
+	#ACT_NAME#,
+	#ACT_BIRTH#,
+	#ACT_TYPE#,
+	#ACT_MV_NO#,
+	#ACT_PROFILE#
+	)
+	</insert>
+	
+	<!-- 배우 수정 -->
+	<update id="adminActUpdate" parameterClass="adminAct">
+		update actor set 
+		ACT_NAME	=#ACT_NAME#,
+		ACT_BIRTH	=#ACT_BIRTH#,
+		ACT_TYPE	=#ACT_TYPE#,
+		ACT_MV_NO	=#ACT_MV_NO#,
+		ACT_PROFILE	=#ACT_PROFILE#
+		 where ACT_NO=#ACT_NO#
+	</update>
+	
+	<!-- 배우 포스터 업데이트 -->
+	<update id="updateActPoster" parameterClass="adminAct">
+		UPDATE ACTOR SET PROFILE_ORGNAME=#PROFILE_ORGNAME#,PROFILE_SAVNAME=#PROFILE_SAVNAME# 
+		WHERE ACT_NO=#ACT_NO#
+	</update>
+	
+	<!-- 배우 스틸컷 업데이트 -->
+	<update id="updateActSteel" parameterClass="adminAct">
+		UPDATE ACTOR SET ACT_FILE_ORGNAME=#ACT_FILE_ORGNAME#,ACT_FILE_SAVNAME=#ACT_FILE_SAVNAME#  
+		WHERE ACT_NO=#ACT_NO#
+	</update>
+	
+	<!-- 배우 삭제 -->
+	<delete id="adminActDel" parameterClass="int">
+		delete from actor where ACT_NO=#ACT_NO#
+	</delete>
+</sqlMap>

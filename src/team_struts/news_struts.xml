@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+
+
+<struts>
+	<!-- 용량제한 10MB 로 설정. -->
+	<constant name="struts.multipart.maxSize" value="10485760" />
+
+	<package name="newsbts" extends="struts-default, tiles-default">
+
+
+		<!-- 뉴스 리스트 -->
+		<action name="newsList" class="news.newsListAction">
+			<result name="success" type="tiles">newsList</result>
+		</action>
+
+
+		<!-- 뉴스7일치보기 -->
+		<action name="news7List" class="news.news7ListAction">
+			<result name="success" type="tiles">news7List</result>
+		</action>
+
+
+		<!-- 뉴스1년치보기 -->
+		<action name="news365List" class="news.news365ListAction">
+			<result name="success" type="tiles">news365List</result>
+		</action>
+
+		<!-- 뉴스 상세보기 -->
+		<action name="newsView" class="news.newsViewAction">
+			<result name="success" type="tiles">newsView</result>
+		</action>
+
+
+
+	</package>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</struts>

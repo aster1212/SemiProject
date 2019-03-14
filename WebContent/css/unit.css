@@ -1,0 +1,68 @@
+.slide_blank {
+	width:100%;
+	height:350px;
+	overflow:hidden;
+}
+.slide_bg {
+	position:absolute;
+	z-index:2;
+	/* background:#242424; */
+	width:100%;
+	left:0px;
+	padding-top:50px;
+	padding-bottom:50px;
+}
+#opDiv{
+	position: absolute;
+	float:left;
+	background-image:url("/bts/image/slideBack2.jpg");
+	opacity:0.3;
+	margin-left:-24%;
+	width:100%;
+	height:300px;
+	padding-top:50px;
+	padding-bottom:30px;
+	z-index: 1;
+	overflow: hidden;
+}
+.slide_bgbg {
+	width:800px;
+	margin:0 auto; 
+	position: relative;
+	border:0;
+}
+.slide
+{
+	width:800px;
+	overflow:hidden;
+	margin:0 auto; 
+	position: relative;
+}
+.slide ul
+{
+	width:3000px;
+	list-style: none;
+	font-size:0;
+}
+.slide ul li
+{
+	/* 이미지에 글씨가 있는경우 font-size 지정 */
+	display: inline-block;
+	margin-left:5px;
+	margin-right:5px;
+	
+}
+.slide_bgbg button.prev
+{
+	position: absolute;
+	left:-70px;
+	top: 100px;
+	z-index:2000px;	
+}
+.slide_bgbg button.next
+{
+	position: absolute;
+	right:-70px;
+	top: 100px;
+	z-index:2000px;	
+}

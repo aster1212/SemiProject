@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+
+	<typeAlias type="message.messageVO" alias="message" />
+	<!-- 리절트 맵 정의 -->
+	<resultMap class="message" id="messageRes">
+		<result property="msg_no" column="msg_no" />
+		<result property="msg_give" column="msg_give" />
+		<result property="msg_take" column="msg_take" />
+		<result property="msg_content" column="msg_content" />
+		<result property="msg_date" column="msg_date" />
+	</resultMap>
+
+	<!-- 받은 Msg 리스트 -->
+	<select id="Msg-select_Rec" remapResults="true"
+		parameterClass="String" resultMap="messageRes">
+		select * from msg
+		WHERE msg_take=#msg_take#
+		order by msg_date desc
+	</select>
+
+	<!-- 내가 쓴 Msg 리스트 -->
+	<select id="Msg-select_Wrt" remapResults="true"
+		parameterClass="String" resultMap="messageRes">
+		select * from msg
+		where msg_give = #msg_give#
+		order by msg_no desc
+	</select>
+
+	<!-- Msg 리스트 개수 -->
+	<select id="Msg_Count" parameterClass="int">
+		select count(*) from msg
+	</select>
+
+	<!-- Msg 쓰기 -->
+	<insert id="WriteMessage" parameterClass="message">
+		insert into msg (msg_give,
+		msg_no,
+		msg_content,
+		msg_take,
+		msg_date)
+
+		values(#msg_give#,
+		MSG_NO_SEQ.NEXTVAL,
+		#msg_content#,
+		#msg_take#,
+		sysdate)
+	</insert>
+
+	<!-- 글 하나 정보 가져오기 -->
+	<select id="Msg-selectOne" remapResults="true"
+		parameterClass="int" resultMap="messageRes">
+		select * from msg
+		where msg_no = #msg_no#
+	</select>
+	<!-- 회원아이디검색 -->
+	<select id="finTakeName" resultClass="String"
+		parameterClass="String">
+		select * from member where mem_name=#memName#
+	</select>
+	<!-- 메시지 검색 -->
+	<select id="Msg-selectSearchW" parameterClass="string"
+		resultMap="messageRes">
+		select * from msg
+		WHERE msg_take like #searchKeyword#
+		ORDER BY msg_no DESC
+	</select>
+
+	<select id="Msg-selectSearchC" parameterClass="string"
+		resultMap="messageRes">
+		select * from msg
+		WHERE msg_content like #searchKeyword#
+		ORDER BY msg_no DESC
+	</select>
+
+	<select id="Msg-selectSearchD" parameterClass="string"
+		resultMap="messageRes">
+		select * from msg
+		WHERE msg_date like #searchKeyword#
+		ORDER BY msg_date DESC
+	</select>
+</sqlMap>
+	

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<!-- <sqlMap namespace=movieAndComment> quary for all 사용시 namespace명.selectAll 
+		이런식으로 갖다쓰면 됨 -->
+	<typeAlias alias="movie" type="movie.movieVO" />
+	<typeAlias alias="moviec" type="movie.moviecVO" />
+	<typeAlias alias="act" type="movie.actVO" />
+	<typeAlias type="movie.tempMVVO" alias="temp" />
+
+	<!-- 별칭정하기, board.boardVO 클래스를 "board"로 대용하겠다. -->
+
+	<resultMap id="movieRes" class="movie">
+
+		<!--board.setNo = rs.getInt("no")와 같다, 다시말해 property는 "set"메소드 역할을, column은 
+			"get"메소드 역할을 한다. -->
+		<result property="MV_NO" column="MV_NO" />
+		<result property="MV_SUBJECT" column="MV_SUBJECT" />
+		<result property="MV_GENRE" column="MV_GENRE" />
+		<result property="MV_DATE" column="MV_DATE" />
+		<result property="MV_DIR" column="MV_DIR" />
+		<result property="MV_MAIN" column="MV_MAIN" />
+		<result property="MV_SUB" column="MV_SUB" />
+		<result property="MV_GRADE" column="MV_GRADE" />
+		<result property="MV_STATE" column="MV_STATE" />
+		<result property="MV_TIME" column="MV_TIME" />
+		<result property="MV_PROD" column="MV_PROD" />
+		<result property="MV_SS" column="MV_SS" />
+		<result property="MV_LS" column="MV_LS" />
+		<result property="MV_CHAIN" column="MV_CHAIN" />
+		<result property="MV_HASH" column="MV_HASH" />
+		<result property="MV_TYPE" column="MV_TYPE" />
+		<result property="MV_FRESH" column="MV_FRESH" />
+		<result property="MV_FILE_ORGNAME" column="MV_FILE_ORGNAME" />
+		<result property="MV_FILE_SAVNAME" column="MV_FILE_SAVNAME" />
+		<result property="MV_AVR" column="MV_AVR" />
+	</resultMap>
+
+	<resultMap id="moviecRes" class="moviec">
+
+		<result property="MVC_NO" column="MVC_NO" />
+		<result property="MV_NO" column="MV_NO" />
+		<result property="MVC_WRITER" column="MVC_WRITER" />
+		<result property="MVC_CONTENT" column="MVC_CONTENT" />
+		<result property="MVC_DATE" column="MVC_DATE" />
+		<result property="MVC_AVR" column="MVC_AVR" />
+		<result property="MEM_GRADE" column="MEM_GRADE" />
+		<result property="MEM_GEN" column="MEM_GEN" />
+
+	</resultMap>
+
+	<resultMap id="actRes" class="act">
+
+		<result property="ACT_NO" column="ACT_NO" />
+		<result property="ACT_NAME" column="ACT_NAME" />
+		<result property="ACT_BIRTH" column="ACT_BIRTH" />
+		<result property="ACT_TYPE" column="ACT_TYPE" />
+		<result property="ACT_MV_NO" column="ACT_MV_NO" />
+		<result property="ACT_PROFILE" column="ACT_PROFILE" />
+		<result property="ACT_FILE_SAVNAME" column="ACT_FILE_SAVNAME" />
+		<result property="ACT_FILE_ORGNAME" column="ACT_FILE_ORGNAME" />
+		<result property="PROFILE_ORGNAME" column="PROFILE_ORGNAME" />
+		<result property="PROFILE_SAVNAME" column="PROFILE_SAVNAME" />
+	</resultMap>
+
+	<resultMap class="temp" id="tempRes">
+		<result column="tempMV_NO1" property="tempMV_NO1" />
+		<result column="tempMV_NO2" property="tempMV_NO2" />
+	</resultMap>
+
+
+
+	<sql id="moviec-all">
+		SELECT * FROM MOVIEC
+	</sql>
+
+	<sql id="movie-all">	<!-- 매크로만들기 - "select-all" 이라는 태그는 다음의 쿼리와 같은 기능 -->
+		SELECT * FROM MOVIE
+	</sql>
+
+	<sql id="act-all">
+		SELECT * FROM ACTOR
+	</sql>
+
+	<sql id="movie-no">	<!-- #no# 는 pstmt의 '?' 와 같은 역할 -->
+		WHERE MV_NO = #MV_NO#
+	</sql>
+
+	<sql id="moviec-no">	<!-- #no# 는 pstmt의 '?' 와 같은 역할 -->
+		WHERE MVC_NO = #MVC_NO#
+	</sql>
+
+	<!-- 영화 번호별 영화검색 -->
+	<select id="movieAllByNo" resultMap="movieRes">
+		<include refid="movie-all" />
+		<include refid="movie-no" />
+	</select>
+
+	<!-- 영화 메인 - 모든 영화 리스트 -->
+	<select id="movieAll" resultMap="movieRes">
+		<include refid="movie-all" />
+		ORDER BY MV_AVR desc
+	</select>
+
+	<!-- 상영종료 및 상영중 영화리스트 -->
+	<select id="movieTypeBy" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE MV_TYPE = #MV_TYPE#
+		ORDER BY MV_AVR desc
+	</select>
+
+
+	<!-- 개봉예정작 리스트 : 개봉일순 정렬 -->
+	<select id="upcomingAll" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE MV_TYPE = #MV_TYPE#
+		ORDER BY MV_DATE asc
+	</select>
+
+
+	<!-- 영화장르선택 리스트 -->
+	<select id="selectGenre" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE MV_GENRE LIKE #MV_GENRE#
+		AND MV_TYPE = #MV_TYPE#
+		ORDER BY MV_DATE
+		desc
+	</select>
+
+
+	<!-- 영화 국가 + 장르별 다중선택 리스트 -->
+	<select id="selectStateByGenre" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE MV_TYPE = #MV_TYPE#
+		AND MV_STATE = #MV_STATE#
+		AND MV_GENRE LIKE
+		#MV_GENRE#
+		ORDER BY MV_DATE desc
+	</select>
+
+	<!-- 영화 국가별정렬 -->
+	<select id="selectState" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE MV_STATE = #MV_STATE#
+		AND MV_TYPE = #MV_TYPE#
+		ORDER BY MV_DATE
+		desc
+	</select>
+
+
+
+	<!-- 영화메뉴 통합검색기능 - keyword로만 검색 -->
+	<select id="searchMovie" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE (MV_SUBJECT like #search# or MV_SUB liKE #search# or MV_MAIN
+		LIKE #search#
+		or MV_SUB LIKE #search# or MV_DIR LIKE #search# or
+		MV_HASH LIKE #search#
+		or MV_PROD LIKE #search# or MV_LS LIKE #search#)
+		AND MV_TYPE = #MV_TYPE#
+		ORDER BY MV_DATE desc
+	</select>
+
+	<!-- 장르선택중 검색기능 -->
+	<select id="searchMovieByGenre" resultMap="movieRes">
+		<include refid="movie-all" />
+		WHERE (MV_SUBJECT like #search# or MV_SUB liKE #search# or MV_MAIN
+		LIKE #search#
+		or MV_DIR LIKE #search# or MV_PROD LIKE #search# or
+		MV_HASH LIKE
+		#search# or MV_LS LIKE #search#)
+		AND MV_GENRE LIKE
+		#MV_GENRE#
+		AND MV_TYPE = #MV_TYPE#
+		ORDER BY MV_DATE desc
+	</select>
+
+	<!-- 해당영화의 평점 평균을 구하는 로직 -->
+	<select id="calAvg" resultMap="moviecRes">
+		select avg(MVC_AVR) from moviec
+		where MV_NO = #MV_NO#
+	</select>
+
+
+
+
+
+	<!-- 배우관련 : 해당 영화와 관련된 모든 배우 불러오기 -->
+	<select id="selectActList" resultMap="actRes">
+		<include refid="act-all" />
+		WHERE ACT_MV_NO like #ACT_MV_NO#
+		<!-- AND ACT_TYPE = #ACT_TYPE# -->
+	</select>
+
+	<!-- 배우 : 해당번호의 영화배우 불러오기 -->
+	<select id="selectAct" resultMap="actRes">
+		<include refid="act-all" />
+		WHERE ACT_NO = #ACT_NO#
+	</select>
+
+	<select id="selectDir" resultMap="actRes">
+		<include refid="act-all" />
+		WHERE ACT_NAME = #ACT_NAME#
+		AND ACT_TYPE = #ACT_TYPE#
+	</select>
+
+
+	<!-- 평점평균을 영화테이블에 업데이트 -->
+
+	<!-- 영화 평점을 업데이트 하는 로직 : update movie set mv_avr = #mv_avr# where mv_no 
+		= #mv_no# -->
+
+	<!-- 꺽쇠(<, > )가 들어가는 경우에는 이렇게 해줘야함!!!!!!!! <![CDATA[ select * from movie 
+		where avg(mv_agr) > 4 ]]> -->
+
+	<!-- #여기넣은변수는# '여기넣은값과'비슷하며 그냥 쓰는 변수들(number타입) 은 $여기넣은값과$ 비슷하다. ex) select 
+		* from movie where $param1$ like #param2# order by name desc -->
+	<select id="mainSelectAll" resultMap="movieRes">
+		select * from movie where mv_type='1' Order by MV_DATE DESC
+	</select>
+	
+	<select id="goodMovie" resultMap="movieRes">
+		select * from movie where MV_HASH ='추천작' order by MV_DATE DESC
+	</select>
+
+
+	<update id="updateAvg" parameterClass="temp">
+		update movie set MV_AVR=(select avg(MVC_AVR) from moviec where
+		MV_NO=#tempMV_NO1#)where MV_NO= #tempMV_NO2#
+	</update>
+</sqlMap>

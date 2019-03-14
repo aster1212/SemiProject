@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+<typeAlias alias="movie" type="movie.movieVO"/>
+	<typeAlias alias="moviec" type="movie.moviecVO"/>
+
+<resultMap id="movieRes" class="movie">
+			
+			
+			<result property="MV_NO" column="MV_NO"/>
+			<result property="MV_SUBJECT" column="MV_SUBJECT"/>
+			<result property="MV_GENRE" column="MV_GENRE"/>
+			<result property="MV_DATE" column="MV_DATE"/>
+			<result property="MV_DIR" column="MV_DIR"/>
+			<result property="MV_MAIN" column="MV_MAIN"/>
+			<result property="MV_SUB" column="MV_SUB"/>		  	
+		  	<result property="MV_GRADE" column="MV_GRADE"/>
+		  	<result property="MV_STATE" column="MV_STATE"/>
+		  	<result property="MV_TIME" column="MV_TIME"/>
+		  	<result property="MV_PROD" column="MV_PROD"/>
+		  	<result property="MV_SS" column="MV_SS"/>
+		  	<result property="MV_LS" column="MV_LS"/>
+		  	<result property="MV_CHAIN" column="MV_CHAIN"/>
+		  	<result property="MV_HASH" column="MV_HASH"/>
+		  	<result property="MV_TYPE" column="MV_TYPE"/>	
+		  	<result property="MV_FRESH" column="MV_FRESH"/>
+		 	<result property="MV_FILE_ORGNAME" column="MV_FILE_ORGNAME"/>
+		 	<result property="MV_FILE_SAVNAME" column="MV_FILE_SAVNAME"/>
+		 	<result property="MV_AVR" column="MV_AVR"/>
+		</resultMap>
+		
+		<resultMap id="moviecRes" class="moviec">
+		
+			<result property="MVC_NO" column="MVC_NO"/>
+			<result property="MV_NO" column="MV_NO"/>
+			<result property="MVC_WRITER" column="MVC_WRITER"/> 
+			<result property="MVC_CONTENT" column="MVC_CONTENT"/> 
+			<result property="MVC_DATE" column="MVC_DATE"/> 
+		 	<result property="MVC_AVR" column="MVC_AVR"/>
+		 	<result property="MEM_GRADE" column="MEM_GRADE"/>
+		 	<result property="MEM_GEN" column="MEM_GEN"/>
+		 	<result property="mem_no" column="mem_no"/>
+			
+		</resultMap>
+		
+		<insert id="insertMovie" parameterClass="movie">
+		 INSERT INTO MOVIE(MV_NO,
+						   MV_SUBJECT,
+						   MV_GENRE,
+						   MV_DATE,
+						   MV_DIR,
+						   MV_PROD,
+						   MV_SUB,
+						   MV_GRADE,
+						   MV_STATE,
+						   MV_TIME,
+						   MV_PROD,
+						   MV_SS,
+						   MV_LS,
+						   MV_CHAIN,
+						   MV_HASH,
+						   MV_TYPE,
+						   MV_FRESH,
+						   MV_FILE_ORGNAME,
+						   MV_FILE_SAVNAME,
+						   MV_AVR
+						   )
+						   
+				    VALUES(MOVIE_MV_NO_SEQ.NEXTVAL,
+				    	   #MV_SUBJECT#,
+				    	   #MV_GENRE#,
+				    	   #MV_DATE#,
+				    	   #MV_DIR#,
+				    	   #MV_PROD#,
+				    	   #MV_SUB#,
+				    	   #MV_GRADE#,
+				    	   #MV_STATE#,
+				    	   #MV_TIME#,
+				    	   #MV_PROD#,
+				    	   #MV_SS#,
+				    	   #MV_LS#,
+				    	   #MV_CHAIN#,
+				    	   #MV_HASH#,
+				    	   #MV_TYPE#,
+				    	   #MV_FRESH#,
+				    	   #MV_FILE_ORGNAME#,
+				    	   #MV_FILE_SAVNAME#,
+				    	   #MV_AVR#
+					)
+		</insert>
+					
+		<insert id="insertMoviec" parameterClass="moviec">
+		 INSERT INTO MOVIEC (MVC_NO,
+						   MV_NO,
+						   MVC_WRITER,
+						   MVC_CONTENT,
+						   MVC_DATE,
+						   MVC_AVR,
+						   MEM_GRADE,
+						   MEM_GEN,
+						   mem_no
+						   )
+	
+				    VALUES (MOVIEC_MVC_NO_SEQ.NEXTVAL,
+				    	   #MV_NO#,
+				    	   #MVC_WRITER#,
+				    	   #MVC_CONTENT#,
+				    	   #MVC_DATE#,
+				    	   #MVC_AVR#,
+				    	   #MEM_GRADE#,
+				    	   #MEM_GEN#,
+				    	   #mem_no#
+					)
+					
+		</insert>
+
+ 	<select remapResults="true" id="commentMoviec" resultClass="moviec" parameterClass="int">
+		SELECT * FROM MOVIEC 
+		 WHERE MV_NO = #MV_NO# 
+		 ORDER BY MVC_NO DESC
+	</select> 
+	
+	<delete id="commentDelete" parameterClass="int">
+		DELETE FROM MOVIEC
+		WHERE MVC_NO=#MVC_NO#
+		</delete>
+		  <select id="mcommentSelectOne" resultMap="moviecRes" parameterClass="int">
+      SELECT * FROM MOVIEC 
+       WHERE MVC_NO = #MVC_NO# 
+       
+   </select>
+   
+   <select id="movieCommentMain" resultMap="moviecRes" parameterClass="int">
+   		select*from moviec where MV_NO=#MV_NO#
+   </select>
+   <select id="AvgSelectOne" resultMap="moviecRes" parameterClass="int">
+   		select*from moviec where MV_NO=#MV_NO# order by MVC_DATE DESC
+   </select>
+</sqlMap>

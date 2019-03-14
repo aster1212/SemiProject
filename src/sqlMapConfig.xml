@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<properties resource="/dbconnect.properties" />
+
+	 <settings useStatementNamespaces="true" />
+	 
+	 <!-- DB의 설정을 properties에서 가져온다. -->
+	 <transactionManager type="JDBC" commitRequired="false">
+	 	<dataSource type="SIMPLE">
+	 		<property name="JDBC.Driver" value="${driver}"/>
+	 		<property name="JDBC.ConnectionURL" value="${url}"/>
+	 		<property name="JDBC.Username" value="${username}"/>
+	 		<property name="JDBC.Password" value="${password}"/>
+	 	</dataSource>
+	 </transactionManager>
+	 
+	 <!-- 지정된 경로에 sql맵을 가져온다 -->
+	 
+	 <!-- 철승 -->
+	 <sqlMap resource="/sql/memberSQL.xml"/>
+	 <sqlMap resource="/sql/adminSQL.xml"/>
+	 <!-- 명관,준학,태형 -->
+	 <sqlMap resource="/sql/mk_movieSQL.xml"/>
+	 <sqlMap resource="/sql/jh_movieSQL.xml"/>
+	 <sqlMap resource="/sql/th_commentSQL.xml"/>
+	 <!-- 태훈,지인 -->
+	 <sqlMap resource="/sql/reportSQL.xml"/>
+	 <sqlMap resource="/sql/tj_boardSQL.xml"/>
+	 <sqlMap resource="/sql/messageSQL.xml"/>
+	 <!-- 뉴스 -->
+	 <sqlMap resource="/sql/newsSQL.xml"/>
+	 
+</sqlMapConfig>

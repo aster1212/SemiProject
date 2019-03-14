@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="members" extends="struts-default, tiles-default">
+		<!-- 메인 액션 -->
+		<action name="main" class="member.LoginAction" method="main">
+			<result type="tiles">main</result>
+		</action>
+		<!-- 관리자 페이지 -->
+		<action name="admin" class="member.LoginAction" method="admin">
+			<result>admin/main.jsp</result>
+		</action>
+		<!-- 로그인 폼 -->
+		<action name="loginForm" class="member.LoginAction" method="form">
+			<result>member/login.jsp</result>
+		</action>
+		<!-- 로그인 액션 -->
+		<action name="loginAction" class="member.LoginAction">
+			<result type="redirect-action">main</result>
+			<result name="login" type="redirect-action">admin</result>
+			<result name="input">member/login.jsp</result>
+			<result name="error">member/login.jsp</result>
+		</action>
+		<!-- 로그 아웃 액션 -->
+		<action name="logoutAction" class="member.LoginAction" method="logout">
+			<result type="redirect-action">main</result>
+		</action>
+		<!-- 회원가입 폼 -->
+		<action name="joinForm" class="member.LoginAction" method="join">
+			<result>member/join.jsp</result>
+		</action>
+		<!-- 테스트 회원가입 액션 -->
+		<action name="joinAction" class="member.LoginAction" method="doJoin">
+			<result type="redirect-action">loginForm</result>
+			<result name="error">member/login.jsp</result>
+		</action>
+		<!-- 회원 찾기 폼 -->
+		<action name="findForm" class="member.LoginAction" method="findForm">
+			<result>member/memFinder.jsp</result>
+		</action>
+		<!-- 회원 찾기 액션 -->
+		<action name="findAction" class="member.LoginAction" method="findAction">
+			<result type="chain">findForm</result>
+		</action>
+	</package>
+	
+	<!-- 마이페이지 -->
+	<package name="memberMy" extends="struts-default, tiles-default">
+		<!-- 마이페이지 가기 -->
+		<action name="MyPageAction" class="member.MyAction">
+			<result type="tiles">MyPageAction</result>
+		</action>
+		<!-- 영화 더 보기 -->
+		<action name="moreMyLike" class="member.MyAction" method="moreLike">
+			<result type="tiles">moreMyLike</result>
+		</action>
+		<!-- 회원 수정 폼 -->
+		<action name="myModifyForm" class="member.MyAction" method="myModifyForm">
+			<result type="tiles">myModifyForm</result>
+		</action>
+		<!-- 회원 수정 액션 -->
+		<action name="myModifyAction" class="member.MyAction" method="myModifyAction">
+			<result type="redirect-action">MyPageAction</result>
+		</action>
+		<!-- 회원 탈퇴 액션 -->
+		<action name="myMemQuit" class="member.MyAction" method="myMemQuitAction">
+			<result type="redirect-action">main</result>
+		</action>
+	</package> 
+	
+	<!-- 관리자 패키지 -->
+	<package name="admin" extends="struts-default">
+		<!-- 회원 목록 리스트 -->
+		<action name="memList" class="admin.memListAction">
+			<result>admin/memList.jsp</result>
+		</action>
+		<!-- 관리자 회원 삭제 -->
+		<action name="adminMemDel" class="admin.memListAction" method="adminMemDel">
+			<result type="redirect-action">memList</result>
+		</action>
+		<!-- 관리자 영화 리스트 -->
+		<action name="adminMvList" class="admin.movieAction">
+			<result>admin/mvList.jsp</result>
+		</action>
+		<!-- 관리자 영화 등록 폼 -->
+		<action name="adminMvInsertForm" class="admin.movieAction" method="insertMovieForm">
+			<result>admin/mvInsertForm.jsp</result>
+		</action>
+		<!-- 관리자 영화 등록 액션 -->
+		<action name="adminMvInsertAction" class="admin.movieAction" method="insertMovieAction">
+			<result type="redirect-action">
+				<param name="actionName">adminMvList</param>
+			</result>
+		</action>
+		<!-- 관리자 영화 수정  폼-->
+		<action name="adminMvUpdateForm" class="admin.movieAction" method="updateMovieForm">
+			<result>admin/mvInsertForm.jsp</result>
+		</action>
+		<!-- 관리자 영화 수정  액션-->
+		<action name="adminMvUpdateAction" class="admin.movieAction" method="updateMovieAction">
+			<result type="redirect-action">
+				<param name="actionName">adminMvList</param>
+			</result>
+		</action>
+		<!-- 관리자 영화 삭제 -->
+		<action name="adminMvDeleteAction" class="admin.movieAction" method="deleteMovieAction">
+			<result type="redirect-action">
+				<param name="actionName">adminMvList</param>
+			</result>
+		</action>
+		
+		<!-- 신고 리스트 -->
+		<action name="adminRpList" class="admin.reportAction">
+			<result>admin/rpList.jsp</result>
+		</action>
+		<!-- 신고글 처리상태 업데이트 -->
+		<action name="adminRpUpdateAction" class="admin.reportAction" method="updateStatus">
+			<result type="redirect-action">
+				<param name="actionName">adminRpList</param>
+			</result>
+		</action>
+		
+		<!-- 신고 글 추적 -->
+		<action name="adminTcAction" class="admin.reportTraceAction">
+			<result>admin/tracer.jsp</result>
+		</action>
+		<!-- 신고글 삭제 -->
+		<action name="adminSuperDelete" class="admin.adminSuperDelete">
+			<result type="redirect-action">
+				<param name="actionName">adminTcAction</param>
+				<param name="rep_ed_no">${rep_ed_no}</param>
+				<param name="rep_ed_type">${rep_ed_type}</param>
+			</result>
+		</action>
+		<!-- 신고 삭제 -->
+		<action name="reportDelete" class="admin.reportAction" method="repDel">
+			<result type="redirect-action">
+				<param name="actionName">adminRpList</param>
+			</result>
+		</action>
+		<!-- validate:result -->
+		<action name="validation" class="admin.ValidationAction">
+			<result>admin/validity.jsp</result>
+		</action>
+		<!-- validate:board -->
+		<action name="validationForBo" class="admin.ValidationAction" method="bocValidation">
+			<result type="redirect-action">
+				<param name="actionName">validation</param>
+				<param name="delCount">${delCount}</param>
+				<param name="delName">${delName}</param>
+			</result>
+		</action>
+		
+		<!-- 배우 -->
+		<!-- 관리자 배우 리스트 -->
+		<action name="adminActList" class="admin.movieAction">
+			<result>admin/actList.jsp</result>
+		</action>
+		
+		<!-- 관리자 배우 등록 폼 -->
+		<action name="adminActInsertForm" class="admin.movieAction" method="insertActForm">
+			<result>admin/actInsertForm.jsp</result>
+		</action>
+		
+		<action name="adminActInsertAction" class="admin.movieAction" method="insertActAction">
+			<result type="redirect-action">
+				<param name="actionName">adminActList</param>
+			</result>
+		</action>
+		
+		<!-- 관리자 배우 수정  폼-->
+		<action name="adminActUpdateForm" class="admin.movieAction" method="updateActForm">
+			<result>admin/actInsertForm.jsp</result>
+		</action>
+		
+		<!-- 관리자 배우 수정  액션-->
+		<action name="adminActUpdateAction" class="admin.movieAction" method="updateActAction">
+			<result type="redirect-action">
+				<param name="actionName">adminActList</param>
+			</result>
+		</action>
+		<!-- 관리자 배우 삭제 -->
+		<action name="adminActDeleteAction" class="admin.movieAction" method="deleteActAction">
+			<result type="redirect-action">
+				<param name="actionName">adminActList</param>
+			</result>
+		</action>
+	</package>
+</struts>

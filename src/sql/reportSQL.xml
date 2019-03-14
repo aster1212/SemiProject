@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="report" type="report.ReportVO" />
+	
+		<!-- 리절트 맵 정의 -->
+	  	<resultMap id="rRes" class="report">
+		  	<result property="rep_no" column="rep_no"/>
+		  	<result property="rep_writer" column="rep_writer"/>
+		  	<result property="rep_ed_type" column="rep_ed_type"/>
+		  	<result property="rep_content" column="rep_content"/>
+		  	<result property="rep_ed_no" column="rep_ed_no"/>
+		  	<result property="rep_date" column="rep_date"/>
+		  	<result property="rep_ed_content" column="rep_ed_content"/>
+		  	<result property="rep_status" column="rep_status"/>
+		</resultMap>
+		
+		<sql id="reportAll">SELECT * FROM report</sql>
+		
+		<insert id="insertReport" parameterClass="report">
+			INSERT INTO report (rep_no,rep_writer,rep_content,rep_date,rep_ed_type,rep_ed_no,rep_ed_content)
+                VALUES (report_SEQ.NEXTVAL,#rep_writer#,#rep_content#,#rep_date#,#rep_ed_type#,#rep_ed_no#,#rep_ed_content#)
+		</insert>
+		
+</sqlMap>
